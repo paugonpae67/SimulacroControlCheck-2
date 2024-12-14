@@ -1,9 +1,16 @@
 package org.springframework.samples.petclinic.award;
 
+
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
+
+import org.junit.jupiter.api.Test;
 import org.springframework.samples.petclinic.owner.Owner;
 import org.springframework.samples.petclinic.pet.Pet;
 import org.springframework.samples.petclinic.pet.PetType;
@@ -30,7 +37,6 @@ public class AwardTest {
         // ...
     }        
     */
-   
     // We provide these methods so that you can use them in your tests to 
     // make the creation of valid Visits easier
     public Visit createVisit(Vet vet){
@@ -66,4 +72,59 @@ public class AwardTest {
     public void setAlgorithm(AwardAlgorithm value){
         this.algorithm=value;
     }
+
+
+    @Test
+    public void conjuntoVisitas1VetTest(){
+
+        Vet vet1= createVet("Manolo", "Díaz");
+        Visit visita1= createVisit(vet1);
+        Visit visita3= createVisit(vet1);
+
+       
+        Set<Visit> lista = Set.of(visita1, visita3);
+
+
+        Set<Vet> vets = algorithm.selectAwardedVets(lista);
+        assertEquals(Set.of(vet1), vets);
+    }
+
+    @Test
+    public void conjuntoVisitasMasde1Vet(){
+
+        Vet vet1= createVet("Manolo", "Díaz");
+        Visit visita1= createVisit(vet1);
+        Visit visita3= createVisit(vet1);
+        Vet vet2= createVet("Carlos", "Lopez");
+        Visit visita2= createVisit(vet2);
+
+        Set<Visit> lista = Set.of(visita1, visita2, visita3);
+        Set<Vet> vets = algorithm.selectAwardedVets(lista);
+        assertEquals(Set.of(vet1), vets);
+
+    }
+
+
+    @Test
+    public void empateVisitas(){
+        Vet vet1= createVet("Manolo", "Díaz");
+        Visit visita1= createVisit(vet1);
+        Visit visita3= createVisit(vet1);
+        Vet vet2= createVet("Carlos", "Lopez");
+        Visit visita2= createVisit(vet2);
+        Visit visita4=createVisit(vet2);
+
+        Set<Visit> lista = Set.of(visita1, visita2, visita3, visita4);
+        Set<Vet> vets = algorithm.selectAwardedVets(lista);
+        assertEquals(Set.of(vet1, vet2), vets);
+    }
+    @Test
+    public void visitaVaciaTest(){
+        Set<Vet> vets = algorithm.selectAwardedVets(null);
+        assertEquals(Set.of(), vets);
+    }
+
+
+
+   
 }

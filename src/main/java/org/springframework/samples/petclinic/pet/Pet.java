@@ -62,6 +62,6 @@ public class Pet extends NamedEntity {
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	protected Owner owner;
 
-	@Transient
+	@OneToMany
 	protected Set<Surgery> surgeries;
 }

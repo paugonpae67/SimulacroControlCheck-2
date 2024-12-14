@@ -48,7 +48,7 @@ public interface VetRepository extends CrudRepository<Vet, Integer> {
 
 	// This query is only to avoid problems in the previous tests. You don't have to/shouldn't
 	// use it as a starting point for Test 6
-	@Query("SELECT v FROM Vet v")
+	@Query("SELECT v.vet FROM Visit v WHERE (v.datetime BETWEEN :start AND :end) AND (v.pet.type IN :type) GROUP BY v.vet HAVING COUNT(v)>=:threshold")
 	public Set<Vet> findMoreActiveVets(@Param("start") LocalDateTime start, 
 	                                    @Param("end") LocalDateTime end, 
 										@Param("type") Set<PetType> type,
